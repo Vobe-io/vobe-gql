@@ -1,0 +1,3 @@
+[submodule "vobe-auth"]
+	path = vobe-auth
+	url = https://github.com/Vobe-io/vobe-auth
