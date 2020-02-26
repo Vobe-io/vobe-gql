@@ -1,0 +1,33 @@
+{
+  "name": "vobe-gql",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "GQL Backend for vobe.io",
+  "main": "bin/server.js",
+  "bin": {
+    "vobe-gql": "server.js"
+  },
+  "dependencies": {
+    "apollo-server": "^2.10.1",
+    "apollo-server-core": "^2.10.1",
+    "bcrypt": "latest",
+    "cli-table3": "^0.5.1",
+    "colors": "^1.4.0",
+    "git-rev-sync": "^2.0.0",
+    "graphql": "^14.6.0",
+    "mongoose": "^5.9.2"
+  },
+  "scripts": {
+    "start": "node --harmony-top-level-await --experimental-modules bin/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vobe-io/vobe-gql.git"
+  },
+  "author": "vobe.io",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vobe-io/vobe-gql/issues"
+  },
+  "homepage": "https://api.vobe.io"
+}
