@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import colors from 'colors';
 import git from 'git-rev-sync';
 import MongooseModule from "./modules/MongooseModule.js";
+import UserModel from "./models/UserModel.js";
 
 colors.enabled = true;
 

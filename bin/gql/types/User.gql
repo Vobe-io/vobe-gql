@@ -1,7 +1,0 @@
-type User {
-    username: String,
-    displayName: String,
-    verified: String,
-    emailVerified: Boolean,
-    created: String
-}

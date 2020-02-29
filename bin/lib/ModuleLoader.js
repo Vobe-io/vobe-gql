@@ -5,8 +5,10 @@ export class ModuleLoader {
     modules = [];
 
     use(m) {
-        if (m instanceof Module) {
+        if (m instanceof Module)
             this.modules.push(m);
+        if (typeof m === 'string') {
+            console.log(import(m));
         }
     }
 
@@ -14,8 +16,9 @@ export class ModuleLoader {
         let modules = [];
         for (let m of this.modules.sort((a, b) => a.index - b.index)) {
             try {
-                await m.load();
-                modules.push(new Status(true, m));
+                let status = await m.load();
+                status.message = m;
+                modules.push(status);
             } catch (e) {
                 let status = new Status(false, m);
                 status.error = e;

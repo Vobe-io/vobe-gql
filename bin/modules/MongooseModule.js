@@ -8,11 +8,13 @@ export default class MongooseModule extends Module {
     index = -1;
 
     async load() {
-        let connection = await mongoose.createConnection('mongodb://mongo:27017/vobe', {
+        await mongoose.connect('mongodb://mongo:27017/vobe?readPreference=primary&appname=VOBE-GQL&ssl=false', {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            useCreateIndex: true
         });
-        return new Status(false);
+
+        return new Status(!!mongoose);
     }
 
 }

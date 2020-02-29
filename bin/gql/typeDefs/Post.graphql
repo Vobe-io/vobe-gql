@@ -1,0 +1,7 @@
+type Post {
+    _id: ID
+    owner: User
+    text: String
+    parent: Post
+    date: Date
+}
