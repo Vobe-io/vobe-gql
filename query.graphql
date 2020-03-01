@@ -1,9 +1,0 @@
-query {
-    posts{
-        owner {
-            username
-        }
-        text
-        date
-    }
-}

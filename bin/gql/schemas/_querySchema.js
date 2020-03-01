@@ -10,7 +10,12 @@ export default class QuerySchema extends Schema {
         users: async () => await UserModel.find({}),
         posts: async () => await PostModel.find({}),
 
-        user: async (parent, args, context, info) => UserModel.findOne({_id: args._id}),
+        user: async (parent, args, context, info) => {
+            if (args._id !== undefined)
+                return UserModel.findOne({_id: args._id});
+            if (args.username !== undefined)
+                return UserModel.findOne({username: args.username});
+        },
         post: async (parent, args, context, info) => PostModel.findOne({_id: args._id})
 
     };

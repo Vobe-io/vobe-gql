@@ -6,4 +6,6 @@ type User {
 
     verified: Boolean
     emailVerified: Boolean
+
+    posts: [Post]
 }

@@ -17,8 +17,7 @@
     "git-rev-sync": "^2.0.0",
     "graphql": "^14.6.0",
     "graphql-tools": "latest",
-    "mongoose": "^5.9.2",
-    "mongoose-schema-to-graphql": "^2.8.1"
+    "mongoose": "^5.9.2"
   },
   "scripts": {
     "start": "node --harmony-top-level-await --experimental-modules bin/server.js"

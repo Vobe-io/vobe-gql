@@ -1,7 +1,10 @@
 type Post {
-    _id: ID
+    _id: ID!
     owner: User
     text: String
-    parent: Post
+
     date: Date
+    parent: Post
+    children: [Post]
+
 }

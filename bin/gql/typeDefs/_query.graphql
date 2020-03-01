@@ -2,6 +2,6 @@ type Query {
     users: [User]
     posts: [Post]
 
-    user(_id: ID!): User
-    post(_id:ID!): Post
+    user(_id: ID, username: String): User
+    post(_id: ID!): Post
 }
