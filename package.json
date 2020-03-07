@@ -14,10 +14,12 @@
     "bson": "^4.0.3",
     "cli-table3": "^0.5.1",
     "colors": "^1.4.0",
+    "deepmerge": "^4.2.2",
     "git-rev-sync": "^2.0.0",
     "graphql": "^14.6.0",
     "graphql-tools": "latest",
-    "mongoose": "^5.9.2"
+    "mongoose": "^5.9.2",
+    "uuid-token-generator": "^1.0.0"
   },
   "scripts": {
     "start": "node --harmony-top-level-await --experimental-modules bin/server.js"

@@ -10,7 +10,6 @@
     \_/    \______/ |_______/  \_______/         \______/  \____ $$$|________/
                                                                 \__/
 [version    %version]
-[commit     %commit]
 [node       %node_version]
 
 

@@ -3,7 +3,8 @@ import apollo from "apollo-server";
 import Status from "../lib/Status.js";
 import * as fs from 'fs';
 import * as path from 'path';
-import {getRootPath} from "../vobe-util.js";
+import GQLLoader from "../lib/GQLLoader.js";
+
 
 const {ApolloServer, gql} = apollo;
 
@@ -14,35 +15,13 @@ export default class ApolloModule extends Module {
 
     async load() {
 
-        const basePath = getRootPath('bin/gql/schemas');
-        let typeDefs = '';
-        let resolvers = {Query: {}};
-
-        fs.readdirSync('bin/gql/typeDefs', {withFileTypes: true}).forEach(f =>
-            typeDefs += fs.readFileSync(path.join('bin/gql/typeDefs', f.name)).toString());
-
-        for (const f of fs.readdirSync(basePath, {withFileTypes: true})) {
-            let clazz = new (await import(path.join(path.join(basePath, f.name)))).default();
-            if (typeof clazz.resolver === 'function')
-                resolvers.Query[clazz.name] = clazz.resolver;
-            if (typeof clazz.resolver === 'object') {
-                if (resolvers[clazz.name] === undefined)
-                    resolvers[clazz.name] = clazz.resolver;
-                else
-                    Object.assign(resolvers[clazz.name], clazz.resolver)
-            }
-        }
-
-
-        console.log(`GQL Queries:\n` + (() => {
-            let out = '';
-            Object.keys(resolvers).forEach(key => out += `\n${key}:\n -> ` + Object.keys(resolvers[key]).join('\n -> '));
-            return out.trim();
-        })());
+        let loader = new GQLLoader();
+        await loader.loadResolver(path.join(process.cwd(), 'bin/gql/resolver'));
+        await loader.loadTypes(path.join(process.cwd(), 'bin/gql/typeDefs'));
 
         const server = new ApolloServer({
-            typeDefs: (gql`${typeDefs}`),
-            resolvers: resolvers
+            typeDefs: loader.typeDefs,
+            resolvers: loader.resolver,
         });
 
         let si = await server.listen();
