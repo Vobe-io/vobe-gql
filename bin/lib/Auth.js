@@ -1,5 +1,5 @@
 import TokenGenerator from 'uuid-token-generator';
-import * as SessionModel from '../models/SessionModel.js';
+import SessionModel from '../models/SessionModel.js';
 
 
 export default class Auth {
