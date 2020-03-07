@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import colors from 'colors';
 import git from 'git-rev-sync';
 import MongooseModule from "./modules/MongooseModule.js";
-import UserModel from "./models/UserModel.js";
+
 
 colors.enabled = true;
 
@@ -13,7 +13,6 @@ let vobeJson = JSON.parse(fs.readFileSync('vobe.json').toString());
 
 console.log(fs.readFileSync('vobe.txt').toString()
     .replace('%version', vobeJson.version)
-    .replace('%commit', git.short(process.cwd()))
     .replace('%node_version', process.version));
 
 
@@ -24,10 +23,13 @@ moduleLoader.use(new MongooseModule());
 
 
 console.log('Loading modules... \n' + 'this may take a while'.grey);
-const modules = await moduleLoader.run();
+moduleLoader.run().then(modules => {
 
-let table = new Table({chars: {'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''}});
-modules.forEach(s => table.push([s.message.name, s.success ? 'LOADED'.green : 'ERROR'.red]));
-console.log(table.toString());
+    let table = new Table({chars: {'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''}});
+    modules.forEach(s => table.push([s.message.name, s.success ? 'LOADED'.green : 'ERROR'.red]));
+    console.log(table.toString());
 
-modules.filter(s => !s.success).forEach(s => console.log(s.error));
+    modules.filter(s => !s.success).forEach(s => console.log(s.error));
+
+    console.log('🚀 Finished loading'.green + `\n${modules.filter(s => !s.success).length} errors`.grey);
+});
