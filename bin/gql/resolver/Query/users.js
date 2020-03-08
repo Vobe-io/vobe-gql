@@ -1,6 +1,9 @@
 import {UserModel} from "../../../Models.js"
+import QueryResolver from "../../../lib/QueryResolver.js";
 
 
-export default async (parent, args, context, info) => {
-    return await UserModel.find({})
-}
+export default new QueryResolver(
+    {requireToken: true},
+    async (parent, args, context, info) =>
+        UserModel.find({})
+).get;

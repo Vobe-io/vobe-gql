@@ -4,4 +4,6 @@ type Query {
 
     user(_id: ID, username: String): User
     post(_id: ID!): Post
+
+    signin(identity: String, password: String!): AuthPayload
 }

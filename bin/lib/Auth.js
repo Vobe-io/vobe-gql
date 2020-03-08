@@ -1,5 +1,5 @@
 import TokenGenerator from 'uuid-token-generator';
-import SessionModel from '../models/SessionModel.js';
+import {SessionModel, UserModel} from '../Models.js';
 
 
 export default class Auth {
@@ -10,33 +10,53 @@ export default class Auth {
         this.token = token;
     }
 
+    static auth = async (token) => await SessionModel.findOne({token: token});
+
+
     user = async () => {
         let Session = await SessionModel.findOne({token: this.token});
         return Session.getUser();
-    }
+    };
 }
 
 export class AuthPipeline {
     items = [];
 
-    use = (item) => this.items.push(() => new Promise(async (resolve, reject) => {
+    /**
+     *
+     * @param item {Array<Boolean|Function>,Boolean|Function}
+     * @param options
+     * @returns {boolean}
+     */
+    run = (item, options = {cancelOnFalse: false}) => {
+        if (options.cancelOnFalse && this.items.includes(false))
+            return false;
         if (item instanceof Array)
-            return resolve(item.forEach(item => this.use(item)));
-        if (item instanceof Boolean)
-            return resolve(item);
-        if (item instanceof Function)
-            return this.use(await item());
+            item.forEach(i => this.run(i, options));
 
-        return reject(new Error('AuthPipelineError: Given Object is not supported. -> ' + typeof item));
-    }));
+        return !this.items.includes(false);
+    }
+}
 
-    process = () => new Promise(async (resolve, reject) => {
-        Promise.all(this.items.map(f => f())).resolve(resolves => {
-            if (resolves.includes(false))
-                return reject(resolves);
-            return resolve(!resolves.includes(false));
-        })
-    });
+export class AuthPayload {
+    token;
+    user;
+
+    async constructor(token) {
+        this.token = token;
+        let session = await SessionModel.findOne({token: this.token});
+        let user = await UserModel.findOne({_id: session.userId});
+        if (!user) throw new Error('Could not get user from Id');
+        this.user = user;
+    }
+
+    async constructor(user) {
+        this.user = user;
+        let session = await new SessionModel({userId: user.id}).save();
+        this.token = session.token;
+    }
+
+
 }
 
 export const genToken = (size = 128) => `${Date.now().toString(36)}.${new TokenGenerator(size)}`;
