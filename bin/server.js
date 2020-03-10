@@ -3,7 +3,6 @@ import ApolloModule from "./modules/ApolloModule.js";
 import Table from 'cli-table3';
 import * as fs from 'fs';
 import colors from 'colors';
-import git from 'git-rev-sync';
 import MongooseModule from "./modules/MongooseModule.js";
 
 

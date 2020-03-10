@@ -1,5 +1,4 @@
-import TokenGenerator from 'uuid-token-generator';
-import SessionModel from '../models/SessionModel.js';
+import {SessionModel, UserModel} from '../Models.js';
 
 
 export default class Auth {
@@ -10,33 +9,54 @@ export default class Auth {
         this.token = token;
     }
 
+    static auth = async (token) => await SessionModel.findOne({token: token});
+
+
     user = async () => {
         let Session = await SessionModel.findOne({token: this.token});
         return Session.getUser();
+    };
+
+}
+
+export class AuthPayload {
+    token;
+    user;
+
+    async create({user, token}) {
+
+        if (!!token) {
+            this.token = token;
+            const {session, user} = this.getSessionUser(this.token);
+            if (!user) throw new Error('Could not get user from Id');
+            this.user = user;
+
+            return this;
+        }
+        if (!!user) {
+            this.user = user;
+
+            if (user instanceof Promise)
+                this.user = await this.user;
+
+            console.log(this.user);
+
+            let session = await this.createSession(this.user);
+            this.token = session.token;
+
+            return this;
+        }
+        return this;
     }
+
+    getSessionUser = async (token) => {
+        let session = await SessionModel.findOne({token: this.token});
+        let user = await UserModel.findOne({_id: session.userId});
+
+        return {session: session, user: user}
+    };
+
+    createSession = async (user) => await new SessionModel({userId: user._id}).save();
+
+
 }
-
-export class AuthPipeline {
-    items = [];
-
-    use = (item) => this.items.push(() => new Promise(async (resolve, reject) => {
-        if (item instanceof Array)
-            return resolve(item.forEach(item => this.use(item)));
-        if (item instanceof Boolean)
-            return resolve(item);
-        if (item instanceof Function)
-            return this.use(await item());
-
-        return reject(new Error('AuthPipelineError: Given Object is not supported. -> ' + typeof item));
-    }));
-
-    process = () => new Promise(async (resolve, reject) => {
-        Promise.all(this.items.map(f => f())).resolve(resolves => {
-            if (resolves.includes(false))
-                return reject(resolves);
-            return resolve(!resolves.includes(false));
-        })
-    });
-}
-
-export const genToken = (size = 128) => `${Date.now().toString(36)}.${new TokenGenerator(size)}`;
