@@ -1,26 +1,26 @@
-import QueryResolver from "../../../lib/QueryResolver.js";
-import {AuthPayload, AuthPipeline} from "../../../lib/Auth.js";
+import {AuthPayload} from "../../../lib/Auth.js";
 import {UserModel} from "../../../Models.js";
 import bcrypt from "bcrypt";
 
 
-export default new QueryResolver({requireToken: false},
-    async (parent, args, context, info) => {
-        let user = await UserModel.findOne(
-            /^(.*[@].*)$/gim.test(args['identity']) ?
-                {email: args['identity']} :
-                {username: args['identity']});
+export default async (parent, args, context, info) => {
 
-        let passed = new AuthPipeline().run([
-            user,
-            args.password,
-            args.identity,
-            await bcrypt.compare(args.password, user.password)
-        ]);
+    if (!args['password'])
+        throw new Error("Password is not defined");
 
-        if (!passed)
-            return new Error("Sign-In did not pass");
+    if (!args['identity'])
+        throw new Error("Identity is not defined");
 
-        return new AuthPayload(user);
+    let user = await UserModel.findOne(
+        /^(.*[@].*)$/gim.test(args['identity']) ?
+            {email: args['identity']} :
+            {username: args['identity']});
 
-    }).get;
+    if (!user)
+        throw new Error("User is not defined");
+
+    if (!(await bcrypt.compare(args['password'], user.password)))
+        throw new Error("Password does not match");
+
+    return new AuthPayload().create({user: user});
+};

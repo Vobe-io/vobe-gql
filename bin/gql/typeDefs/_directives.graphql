@@ -1,0 +1,9 @@
+directive @auth(
+    use: use = TOKEN,
+) on OBJECT | FIELD_DEFINITION
+
+enum use {
+    TOKEN
+    NONE
+}
+

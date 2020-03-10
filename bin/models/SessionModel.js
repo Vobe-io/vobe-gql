@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bson from 'bson';
-import * as Auth from "../lib/Auth.js";
-import * as UserModel from "../models/UserModel.js";
+import {UserModel} from "../Models.js";
+import TokenGenerator from "uuid-token-generator";
 
 
 let SessionSchema = new mongoose.Schema({
@@ -17,7 +17,7 @@ let SessionSchema = new mongoose.Schema({
     token: {
         type: String,
         required: true,
-        default: Auth.genToken()
+        default: `${Date.now().toString(36)}.${new TokenGenerator(128).generate().toLowerCase()}`
     }
 });
 

@@ -17,11 +17,15 @@ export default class ApolloModule extends Module {
 
         let loader = new GQLLoader();
         await loader.loadResolver(path.join(basePath, 'resolver'));
+        await loader.loadDirectives(path.join(basePath, 'directives'));
         await loader.loadTypes(path.join(basePath, 'typeDefs'));
 
         const server = new ApolloServer({
+            schemaDirectives: loader.directives,
             typeDefs: loader.typeDefs,
             resolvers: loader.resolver,
+
+            context: ({req}) => req,
         });
 
         let si = await server.listen();

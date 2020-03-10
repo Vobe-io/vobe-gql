@@ -1,4 +1,4 @@
-type User {
+type User{
     _id: ID
     username: String
     displayName:String

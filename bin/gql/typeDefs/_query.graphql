@@ -1,9 +1,28 @@
 type Query {
-    users: [User]
-    posts: [Post]
+    # DEBUG
+    users: [User] @auth
+    posts: [Post] @auth
 
-    user(_id: ID, username: String): User
-    post(_id: ID!): Post
 
-    signin(identity: String, password: String!): AuthPayload
+    # USER
+    user(_id: ID, username: String): User @auth
+
+    # POST
+    post(_id: ID!): Post @auth
+    createPost(
+        text: String!
+        parent: ID
+    ): Post @auth
+
+    # AUTH
+    signin(
+        identity: String!,
+        password: String!
+    ): AuthPayload
+
+    signup(
+        username: String!,
+        email: String!,
+        password: String!
+    ): AuthPayload
 }
