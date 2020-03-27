@@ -9,22 +9,29 @@ services:
     restart: always
     ports:
       - 4000:4000
-    links:
-      - mongo
-    depends_on:
-          - mongo
+    #links:
+    #  - mongo
+    #depends_on:
+    #      - mongo
     volumes:
       - ./vobe/:/vobe
+    networks:
+      - vobe
 
-  mongo:
-    image: mongo
-    container_name: vobe-mongo
-    hostname: mongo
-    restart: always
-    ports:
-      - 27017:27017
-    volumes:
-      - mongodata:/data/db
+  # Removed until 0.5 release    
+  #mongo:
+  #  image: mongo
+  #  container_name: vobe-mongo
+  #  hostname: mongo
+  #  restart: always
+  #  ports:
+  #    - 27017:27017
+  #  volumes:
+  #    - mongodata:/data/db
 
 volumes:
   mongodata:
+
+networks:
+  vobe:
+    external: true
