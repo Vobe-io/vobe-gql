@@ -13,6 +13,7 @@ services:
           - mongo
     volumes:
       - ./vobe/:/vobe
+      - ./bin/:/usr/src/app/bin
     networks:
       - vobe
 
