@@ -5,7 +5,6 @@ import * as fs from 'fs';
 import colors from 'colors';
 import MongooseModule from "./modules/MongooseModule.js";
 
-
 colors.enabled = true;
 
 let vobeJson = JSON.parse(fs.readFileSync('vobe.json').toString());
