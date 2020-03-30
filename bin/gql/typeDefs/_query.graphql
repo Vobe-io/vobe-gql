@@ -25,9 +25,4 @@ type Query {
         email: String!,
         password: String!
     ): AuthPayload
-
-    verify(
-        email: String!,
-        token: String!
-    ): String
 }

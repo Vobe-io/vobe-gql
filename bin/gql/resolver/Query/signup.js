@@ -1,7 +1,5 @@
-import {UserModel, VerificationModel} from "../../../Models.js";
+import {UserModel} from "../../../Models.js";
 import {REGEX} from "../../../vobe-util.js";
-import {transporter} from '../../../modules/MailModule.js';
-import randToken from 'rand-token';
 import {AuthPayload} from "../../../lib/Auth.js";
 
 
@@ -42,17 +40,6 @@ export default async (parent, args, context, info) => {
 
     if (!user)
         throw new Error("Couldn't create user.");
-
-    new VerificationModel({
-        email: email
-    }).save();
-
-    await transporter.sendMail({
-        from: '"Vobe" <auth@vobe.io>',
-        to: email,
-        subject: "Please verify your account",
-        text: "Hey, you've just created an account on vobe.io. Please click on the link below to verify it. https://beta.vobe.io/verification/32093092",
-    });
 
     return new AuthPayload().create({user: user});
 };

@@ -1,6 +1,3 @@
 {
-  "version": "0.0.3-alpha",
-  "authMail": "auth@vobe.io",
-  "mailUsername": "auth@vobe.io",
-  "mailPassword": "***REMOVED***"
+  "version": "0.0.2-alpha"
 }
