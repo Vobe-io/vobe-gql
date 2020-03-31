@@ -43,15 +43,18 @@ export default async (parent, args, context, info) => {
     if (!user)
         throw new Error("Couldn't create user.");
 
+    let token = randToken.generate(64);
+
     new VerificationModel({
-        email: email
+        email: email,
+        token: token
     }).save();
 
     await transporter.sendMail({
         from: '"Vobe" <auth@vobe.io>',
         to: email,
         subject: "Please verify your account",
-        text: "Hey, you've just created an account on vobe.io. Please click on the link below to verify it. https://beta.vobe.io/verification/32093092",
+        text: "Hey, you've just created an account on vobe.io. Please click on the link below to verify it. https://beta.vobe.io/verification/" + token + "/" + email,
     });
 
     return new AuthPayload().create({user: user});
