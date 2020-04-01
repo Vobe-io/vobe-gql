@@ -10,7 +10,7 @@ services:
     links:
       - mongo
     depends_on:
-          - mongo
+      - mongo
     volumes:
       - ./vobe/:/vobe
       - ./bin/:/usr/src/app/bin
@@ -26,11 +26,13 @@ services:
       - 27017:27017
     volumes:
       - mongodata:/data/db
+      - mongoconfig:/data/configdb
     networks:
       - vobe
 
 volumes:
   mongodata:
+  mongoconfig:
 
 networks:
   vobe:
