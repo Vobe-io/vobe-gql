@@ -21,7 +21,7 @@ let SessionSchema = new mongoose.Schema({
     }
 });
 
-SessionSchema.methods.getUser = async () => await UserModel.findOne({_id: this.userId});
+SessionSchema.methods.getUser = async (userId) => await UserModel.findOne({_id: userId});
 
 let SessionModel = mongoose.model('session', SessionSchema);
 export default SessionModel;

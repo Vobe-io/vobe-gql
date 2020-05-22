@@ -1,9 +1,4 @@
 directive @auth(
-    use: use = TOKEN,
+    roles: [String] = ["ADMIN", "OBSERVER"],
+    scopes: [String] = ["owner"]
 ) on OBJECT | FIELD_DEFINITION
-
-enum use {
-    TOKEN
-    NONE
-}
-

@@ -1,0 +1,33 @@
+type Mutation {
+    # USER
+    deleteUser(
+        _id: ID
+    ): String
+
+    # POST
+    createPost(
+        text: String!
+        parent: ID
+    ): Post
+
+    deletePost(
+        _id: ID
+    ): String
+
+    # AUTH
+    signin(
+        identity: String!,
+        password: String!
+    ): AuthPayload
+
+    signup(
+        username: String!,
+        email: String!,
+        password: String!
+    ): AuthPayload
+
+    verify(
+        email: String!,
+        token: String!
+    ): String
+}

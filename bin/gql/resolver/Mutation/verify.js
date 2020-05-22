@@ -11,7 +11,7 @@ export default async (parent, args, context, info) => {
 
     await VerificationModel.findOneAndDelete({email: email, token: token}).then(async verification =>{
         if(!verification) throw new Error('Verification not valid');
-        else await UserModel.findOneAndUpdate({email: email}, {emailVerified: true});
+        else await UserModel.findOneAndUpdate({email: email}, {emailVerified: true, role: 'USER'});
     });
 
     return "Email verified";

@@ -1,5 +1,1 @@
-import {UserModel} from "../../../Models.js"
-
-
-export default async (parent, args, context, info) =>
-    UserModel.find({});
+export default async (parent, {last}, {dataSources: {users}}, info) => users.getUsers(last);

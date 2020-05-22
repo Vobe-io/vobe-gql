@@ -8,6 +8,7 @@
     "vobe-gql": "server.js"
   },
   "dependencies": {
+    "apollo-datasource-mongodb": "^0.2.6",
     "apollo-server": "^2.10.1",
     "apollo-server-core": "^2.10.1",
     "bcrypt": "latest",
@@ -24,7 +25,7 @@
     "uuid-token-generator": "^1.0.0"
   },
   "scripts": {
-    "start": "node --harmony-top-level-await --experimental-modules bin/server.js"
+    "start": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -35,5 +36,6 @@
   "bugs": {
     "url": "https://github.com/vobe-io/vobe-gql/issues"
   },
-  "homepage": "https://api.vobe.io"
+  "homepage": "https://api.vobe.io",
+  "devDependencies": {}
 }

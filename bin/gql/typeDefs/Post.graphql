@@ -6,5 +6,4 @@ type Post {
     date: Date
     parent: Post
     children: [Post]
-
 }

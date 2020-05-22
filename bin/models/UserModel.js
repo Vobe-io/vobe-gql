@@ -33,9 +33,19 @@ let UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    role: {
+        type: String,
+        enum: ['ADMIN', 'OBSERVER', 'USER','PENDING', 'BANNED'],
+        default: 'PENDING'
+    },
     created: {
         type: Date,
         default: Date.now
+    },
+    scopes: {
+        type: [Object],
+        required: true,
+        default: []
     }
 });
 

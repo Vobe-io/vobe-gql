@@ -1,11 +1,11 @@
-type User{
+type User {
     _id: ID
+    email: String @auth
     username: String
-    displayName:String
+    displayName: String
     created: Date
-
     verified: Boolean
-    emailVerified: Boolean
-
+    emailVerified: Boolean @auth
+    role: String @auth
     posts: [Post]
 }

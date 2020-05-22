@@ -16,8 +16,6 @@ services:
       - ./bin/:/usr/src/app/bin
     ports:
       - 4000:4000
-    networks:
-      - vobe
 
   mongo:
     image: mongo
@@ -29,12 +27,6 @@ services:
     volumes:
       - mongodata:/data/db
       - .:/data/configdb
-    networks:
-      - vobe
 
 volumes:
   mongodata:
-
-networks:
-  vobe:
-    external: true

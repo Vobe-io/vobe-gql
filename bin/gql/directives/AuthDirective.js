@@ -1,52 +1,81 @@
-import apollo from 'apollo-server';
-import {SessionModel, UserModel} from '../../Models.js';
+import apollo from "apollo-server";
+import graphql from "graphql";
 
-
-const {ApolloServer, SchemaDirectiveVisitor} = apollo;
+const { SchemaDirectiveVisitor } = apollo;
+const { defaultFieldResolver } = graphql;
 
 export default {
     auth: class AuthDirective extends SchemaDirectiveVisitor {
         visitObject(type) {
             this.ensureFieldsWrapped(type);
-            type._requiredAuthRole = this.args.use;
+            type._requiredAuthRoles = this.args.roles;
+            type._requiredScopes = this.args.scopes;
         }
 
         visitFieldDefinition(field, details) {
             this.ensureFieldsWrapped(details.objectType);
-            field._requiredAuthRole = this.args.use;
+            field._requiredAuthRoles = this.args.roles;
+            field._requiredScopes = this.args.scopes;
         }
 
         ensureFieldsWrapped(objectType) {
-
             if (objectType._authFieldsWrapped) return;
             objectType._authFieldsWrapped = true;
 
             const fields = objectType.getFields();
-
-            Object.keys(fields).forEach(fieldName => {
+            Object.keys(fields).forEach((fieldName) => {
                 const field = fields[fieldName];
-                const {resolve = defaultFieldResolver} = field;
-                field.resolve = async function (...args) {
-                    const context = args[2];
+                const { resolve = defaultFieldResolver } = field;
+                field.resolve = async function (..._args) {
+                    const [parent, args, context, info] = _args;
+                    const requiredRoles =
+                        field._requiredAuthRoles ||
+                        objectType._requiredAuthRoles;
+                    const requiredScopes =
+                        field._requiredScopes || objectType._requiredScopes;
+                    if (
+                        requiredScopes === undefined &&
+                        requiredRoles === undefined
+                    )
+                        return await resolve.apply(this, _args);
 
-                    const requiredRole =
-                        field._requiredAuthRole ||
-                        objectType._requiredAuthRole;
+                    if (!context.user) return null;
 
-                    if (requiredRole === undefined)
-                        return resolve.apply(this, args);
+                    if (
+                        args._id &&
+                        args._id.toString() === context.user._id.toString()
+                    )
+                        return await resolve.apply(this, _args);
 
-                    if (context.headers['token'] === undefined)
-                        throw new Error('Session key is not defined');
+                    if (
+                        parent &&
+                        (parent._id.toString() ===
+                            context.user._id.toString() ||
+                            (parent.owner &&
+                                parent.owner.toString() ===
+                                    context.user._id.toString()))
+                    )
+                        return await resolve.apply(this, _args);
 
-                    const session = await SessionModel.findOne({token: context.headers['token']});
-                    if (session === undefined)
-                        throw new Error('Token is not valid');
+                    if (requiredScopes && parent)
+                        for (var scope of parent.scopes) {
+                            if (
+                                scope._id.toString() ===
+                                    context.user._id.toString() &&
+                                requiredScopes.includes(scope.name)
+                            )
+                                return await resolve.apply(this, _args);
+                        }
 
-                    context.user = await UserModel.findOne({_id: session.userId});
-                    return resolve.apply(this, args);
+                    if (
+                        requiredRoles &&
+                        requiredRoles.includes(context.user.role)
+                    )
+                        return await resolve.apply(this, _args);
+
+                    return null;
                 };
             });
         }
-    }
-}
+    },
+};

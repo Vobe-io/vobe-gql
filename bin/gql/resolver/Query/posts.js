@@ -1,4 +1,1 @@
-import {PostModel} from "../../../Models.js"
-
-
-export default async (parent, args, context, info) => PostModel.find({});
+export default async (parent, {last}, {dataSources: {posts}}, info) => posts.getPosts(last);

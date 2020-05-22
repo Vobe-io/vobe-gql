@@ -10,4 +10,4 @@ RUN npm audit fix
 COPY . .
 
 EXPOSE 4000
-CMD [ "nodemon" ]
+CMD [ "nodemon", "--legacy-watch", "-e", "js,pug,json,graphql" ]
