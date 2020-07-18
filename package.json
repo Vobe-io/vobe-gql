@@ -17,7 +17,7 @@
     "colors": "^1.4.0",
     "deepmerge": "^4.2.2",
     "git-rev-sync": "^2.0.0",
-    "graphql": "^14.6.0",
+    "graphql": "^14.7.0",
     "graphql-tools": "latest",
     "mongoose": "^5.9.2",
     "nodemailer": "^6.4.6",
