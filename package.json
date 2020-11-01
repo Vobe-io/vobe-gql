@@ -19,7 +19,7 @@
     "git-rev-sync": "^2.0.0",
     "graphql": "^14.7.0",
     "graphql-tools": "latest",
-    "mongoose": "^5.9.2",
+    "mongoose": "^5.10.11",
     "nodemailer": "^6.4.6",
     "rand-token": "^1.0.1",
     "uuid-token-generator": "^1.0.0"
