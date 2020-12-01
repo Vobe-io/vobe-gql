@@ -20,7 +20,7 @@
     "graphql": "^14.7.0",
     "graphql-tools": "latest",
     "mongoose": "^5.9.2",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "rand-token": "^1.0.1",
     "uuid-token-generator": "^1.0.0"
   },
